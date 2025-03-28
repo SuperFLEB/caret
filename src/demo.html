@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo</title>
+	<style>
+		:root, input, textarea {
+			background-color: #000;
+			color: #fff;
+			font-size: 20px;
+			padding: 30px;
+		}
+
+		@keyframes blink {
+			0% {
+				opacity: 0;
+			}
+			50% {
+				opacity: 100%;
+			}
+		}
+
+		.customCaret {
+			background: linear-gradient(to top, #fff 15%, transparent 15%, transparent);
+			mix-blend-mode: difference;
+			animation: blink .5s infinite;
+			animation-timing-function: step-end;
+		}
+
+		#customCaretContainer input[type='text'],
+		#customCaretContainer input[type='password'],
+		#customCaretContainer input[type='email'],
+		#customCaretContainer input[type='tel'],
+		#customCaretContainer input[type='url'],
+		#customCaretContainer input[type='search'],
+		#customCaretContainer input[type='number'],
+		#customCaretContainer input:not([type]),
+		#customCaretContainer textarea {
+			caret-color: transparent;
+		}
+	</style>
+</head>
+<body>
+
+<div style="height: 300px"></div>
+
+<div id="customCaretContainer" spellcheck="false">
+	<h2>These text inputs have caret tracking and a fancy blinking bar</h2>
+	<textarea cols="50" rows="10"></textarea>
+	<input type="text"/>
+</div>
+
+<h2>These do not.</h2>
+<textarea cols="50" rows="10"></textarea>
+<input type="text"/>
+
+</body>
+<script src="js/CaretTracker.js"></script>
+<script>
+	const ct = new CaretTracker(document.getElementById('customCaretContainer'));
+	ct.className = "customCaret";
+</script>
+</html>
