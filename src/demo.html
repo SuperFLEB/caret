@@ -1,63 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+<base href="../dist/" />
 <head>
 	<meta charset="UTF-8">
 	<title>Demo</title>
 	<style>
-		:root, input, textarea {
+		:root {
 			background-color: #000;
-			color: #fff;
+			color: #f80;
 			font-size: 20px;
 			padding: 30px;
 		}
 
-		@keyframes blink {
-			0% {
-				opacity: 0;
+		@property --progress {
+			initial-value: 0;
+			inherits: false;
+			syntax: "<number>";
+		}
+
+		@keyframes orbit {
+			from {
+				--progress: 0;
 			}
-			50% {
-				opacity: 100%;
+			to {
+				--progress: 6.2831853;
 			}
 		}
 
 		.customCaret {
-			background: linear-gradient(to top, #fff 15%, transparent 15%, transparent);
-			mix-blend-mode: difference;
-			animation: blink .5s infinite;
-			animation-timing-function: step-end;
+			background: transparent;
+			border: 1px dashed #fff;
+			border-radius: 10px;
 		}
 
-		#customCaretContainer input[type='text'],
-		#customCaretContainer input[type='password'],
-		#customCaretContainer input[type='email'],
-		#customCaretContainer input[type='tel'],
-		#customCaretContainer input[type='url'],
-		#customCaretContainer input[type='search'],
-		#customCaretContainer input[type='number'],
-		#customCaretContainer input:not([type]),
+		.charm {
+			animation: orbit 1s infinite;
+			animation-timing-function: linear;
+			position: relative;
+			left: calc(cos(var(--progress)) * 20px - 50%);
+			top: calc(sin(var(--progress)) * 20px);
+		}
+
+		label {
+			display: block;
+		}
+
+		input, textarea {
+			font-size: inherit;
+			padding: 30px;
+			margin: 0 20px;
+			vertical-align: top;
+		}
+
+		#customCaretContainer input,
 		#customCaretContainer textarea {
-			caret-color: transparent;
+			color: currentColor;
+			background-color: transparent;
+			border: 1px solid currentColor;
+			outline-color: currentColor;
+			caret-color: #f00;
+		}
+
+		#customCaretContainer input:focus-visible,
+		#customCaretContainer textarea:focus-visible {
+			outline-color: currentColor;
+			outline-style: solid;
 		}
 	</style>
 </head>
 <body>
-
-<div style="height: 300px"></div>
-
 <div id="customCaretContainer" spellcheck="false">
-	<h2>These text inputs have caret tracking and a fancy blinking bar</h2>
-	<textarea cols="50" rows="10"></textarea>
-	<input type="text"/>
+	<h2>These text inputs have caret tracking and a fancy cursor</h2>
+	<p>(The original caret has been left visible in a dark red so you can see how it relates to the custom one.
+		In practice, you would change its color to <em>transparent</em> or the like.)</p>
+	<label>Textarea: <textarea cols="50" rows="10"></textarea></label>
+	<label>Input: <input /></label>
+	<label>Text: <input type="text" /></label>
+	<label>Password: <input type="password" /></label>
+	<label>Search: <input type="search" /></label>
+	<label>Tel: <input type="tel" /></label>
+	<label>URL: <input type="url" /></label>
 </div>
 
 <h2>These do not.</h2>
-<textarea cols="50" rows="10"></textarea>
-<input type="text"/>
+<label>Textarea: <textarea cols="50" rows="10"></textarea></label>
+<label>Input: <input /></label>
+<label>Text: <input type="text" /></label>
+<label>Password: <input type="password" /></label>
+<label>Search: <input type="search" /></label>
+<label>Tel: <input type="tel" /></label>
+<label>URL: <input type="url" /></label>
 
 </body>
-<script src="js/CaretTracker.js"></script>
+<script src="./CaretTracker.min.js"></script>
 <script>
 	const ct = new CaretTracker(document.getElementById('customCaretContainer'));
 	ct.className = "customCaret";
+	ct.endCharacterReplacement = "X";
+	const charms = [..."💖✨🔑🍀🐞🎀🌟🦋🐚🐎🐾🍎🎶🔮🌙🍁🏹💎🕊️"];
+	ct.customCaretCallback = (spec) => {
+		const charm = document.createElement("div");
+		charm.className = "charm";
+		charm.innerText = charms[Math.random() * charms.length | 0];
+		return charm;
+	};
 </script>
 </html>
