@@ -13,17 +13,12 @@ information for whatever suits your purpose.
 
 ## Current State of Things
 
-We're calling this "not quite ready for prime time". It's mostly there, but it's got a couple of bugs to wring out still,
-and I haven't put in tests yet, so it's still version zero. More coming soon to wrap that up.
-
-### Known/anticipated issues
-
-- Doesn't respond to document reflow. The cursor doesn't move until something happens to update it.
+I haven't put in tests yet, so it's still version zero. More coming soon.
 
 ### Known limitations (not bugs)
 
-- Z-order must be enforced manually. Usually, this isn't a problem because input boxes don't tend to have layout so any
-  absolute-positioned element will overlay them, but if you're doing something fancier, you'll have to compensate.
+- Z-order must be enforced specifically. Usually, this isn't a problem because input boxes don't tend to have layout
+  so any absolute-positioned element will overlay them, but if you're doing something fancier, you'll have to compensate.
 
 ## To get it
 
@@ -32,7 +27,7 @@ This isn't currently on the NPM registry, only on GitHub Registry. To get it, ge
 
 NPM:
 ```shell
-(instructions coming soon)
+(Instructions coming soon. I use Yarn so I'll need to check how it works with NPM.)
 ```
 
 Yarn 2+:
