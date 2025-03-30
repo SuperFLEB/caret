@@ -22,6 +22,8 @@ class CaretTracker {
 	#caret: HTMLDivElement | undefined;
 	#parent!: HTMLElement;
 	#faux: HTMLDivElement | undefined;
+	#resizeObserver: ResizeObserver;
+	#debounce: number | undefined;
 
 	#lastContext: any[] = [];
 
@@ -149,11 +151,15 @@ class CaretTracker {
 		const activeElement = document.activeElement;
 		const pos = this.#measure(activeElement as HTMLElement | null);
 
+		if (this.#debounce) clearTimeout(this.#debounce);
+
 		if (!(activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement) || !pos) {
 			this.#clipBox?.remove();
 			this.onChange?.(null);
 			return;
 		}
+
+		const computedStyle = getComputedStyle(activeElement);
 
 		if (!this.#caret) {
 			this.#caret = document.createElement("div");
@@ -173,12 +179,24 @@ class CaretTracker {
 		this.#clipBox.style.cssText = `position: absolute; pointer-events: none; left: ${activeElement.offsetLeft}px; top: ${activeElement.offsetTop}px; width: ${activeElement.clientWidth}px; height: ${activeElement.clientHeight}px;`;
 		this.#clipBox.style.overflow = this.clip ? "hidden" : "visible";
 
+		// This will allow font and currentColor to be accurate on the caret
+		this.#clipBox.style.font = computedStyle.font;
+		this.#clipBox.style.color = computedStyle.color;
+
 		// Conditionally do this because it restarts animation.
 		if (activeElement.previousElementSibling !== this.#clipBox) {
 			this.#clipBox.replaceChildren(this.#caret);
 			activeElement.parentNode?.insertBefore(this.#clipBox, activeElement);
+			this.#resizeObserver.disconnect();
+			this.#resizeObserver.observe(activeElement);
+			this.#resizeObserver.observe(this.#parent);
 		}
 		this.onChange?.(pos);
+	}
+
+	#observerHit() {
+		if (this.#debounce) clearTimeout(this.#debounce);
+		setTimeout(this.#handle.bind(this), 50);
 	}
 
 	mount(parent: HTMLElement | undefined = undefined) {
@@ -191,6 +209,7 @@ class CaretTracker {
 			this.#parent.addEventListener(event, this.#handle.bind(this), {signal: this.#killController.signal});
 		}
 		this.#parent.addEventListener("scroll", this.#handle.bind(this), {capture: true, signal: this.#killController.signal});
+		this.#resizeObserver = new ResizeObserver(this.#observerHit.bind(this));
 	}
 
 	unmount() {
@@ -208,6 +227,9 @@ class CaretTracker {
 
 		this.#positionCache.clear();
 		this.#killController.abort("Unmount");
+
+		this.#resizeObserver.disconnect();
+		this.#resizeObserver = undefined;
 	}
 }
 

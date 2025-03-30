@@ -1,6 +1,6 @@
 {
 	"name": "@superfleb/caret",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "Caret tracker that will point to the insertion caret in input and textarea fields",
 	"exports": {
 		"require": "./dist/CaretTracker.cjs.min.js",
