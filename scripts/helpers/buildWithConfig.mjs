@@ -13,7 +13,7 @@ import banner from "./banner.mjs";
  * @property {string} iifeGlobal Name for the global variable in the SCRIPT-tag variant
  * @property {string} importName Name of the import in the usage notes (source for named imports, destination for default imports)
  * @property {boolean} defaultImport Use a default import (versus named) in the usage notes.
- * @property {string[]} usageNotes Usage example, after/not including the import statement. Do not use block comments.
+ * @property {string[]} usage Usage example, after/not including the import statement. Do not use block comments.
  */
 
 /**
@@ -38,13 +38,12 @@ export default async function buildWithConfig(buildConfig) {
 // Esbuild each variant
 	for (const variant of [
 		{ext: "cjs", format: "cjs", banner: Formats.COMMONJS},
-		{ext: "mjs", format: "esm", banner: Formats.ESM},
+		{dir: "esm", ext: "mjs", format: "esm", banner: Formats.ESM},
 		{ext: "js", format: "iife", banner: Formats.SCRIPT},
 	]) {
-		const filename = `${buildConfig.baseName}${buildConfig.minify ? ".min" : ""}.${variant.ext}`;
+		const filename = `${buildConfig.baseName}.${variant.ext}`;
 		const esSettings = {
 			...esSettingsBase,
-			outfile: home(`dist/${filename}`),
 			format: variant.format,
 			banner: {
 				js: banner({
@@ -66,7 +65,7 @@ export default async function buildWithConfig(buildConfig) {
 		});
 	}
 
-// TSC to output a types file
+	// TSC to output a types file
 	const configFile = ts.readConfigFile(
 		ts.findConfigFile(
 			home("."), ts.sys.fileExists,
@@ -80,11 +79,11 @@ export default async function buildWithConfig(buildConfig) {
 	).options;
 	compilerOptions.declaration = true;
 	compilerOptions.emitDeclarationOnly = true;
-	compilerOptions.outFile = home("dist", `${buildConfig.baseName}.d.ts`);
+	compilerOptions.outDir = home("dist");
 	const program = ts.createProgram({
 		rootNames: [`./src/${buildConfig.entrypoint}`],
 		options: compilerOptions,
 	});
 	program.emit();
-}
 
+}

@@ -4,8 +4,6 @@ import {home, rm} from "./helpers/helpers.mjs";
 
 rm("dist");
 mkdirSync(home("dist"));
-copyFileSync(home("src/demo.html"), home("dist/demo.html"));
-
 await buildWithConfig({
 	entrypoint: "CaretTracker.ts",
 	minify: true,
@@ -13,8 +11,9 @@ await buildWithConfig({
 	importName: "CaretTracker",
 	defaultImport: true,
 	iifeGlobal: "CaretTracker",
-	usageNotes: [
+	usage: [
 		"const tracker = new CaretTracker();",
 		"// ..."
 	]
 });
+copyFileSync(home("src/demo.html"), home("dist/demo.html"));
