@@ -25,8 +25,6 @@
 		"declarationMap": true,
 		/* Create sourcemaps for d.ts files. */
 		"emitDeclarationOnly": true,
-		/* Only output d.ts files and not JavaScript files. */
-		"outFile": "./dist/CaretTracker.d.ts",
 		/* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
 		"outDir": "./dist",
 		/* Specify an output folder for all emitted files. */
