@@ -6,7 +6,7 @@ import {home, rm} from "./helpers.mjs";
 const esSettings = {
 	entryPoints: ["src/CaretTracker.ts"],
 	bundle: true,
-	minify: false,
+	minify: true,
 	sourcemap: true,
 	sourceRoot: "../src",
 };
