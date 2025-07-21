@@ -45,7 +45,7 @@ class CaretTracker {
 	customCaretCallback: (spec: CaretSpec) => Node | undefined = voidFn;
 	onChange: (spec: CaretSpec | null) => void = voidFn;
 
-	constructor(parent: HTMLElement | undefined) {
+	constructor(parent?: HTMLElement) {
 		if (parent) this.mount(parent);
 	}
 

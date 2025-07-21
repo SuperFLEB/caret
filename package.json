@@ -1,6 +1,6 @@
 {
 	"name": "@superfleb/caret",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "Caret tracker that will point to the insertion caret in input and textarea fields",
 	"exports": {
 		"types": "./dist/CaretTracker.d.ts",
